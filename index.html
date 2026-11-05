@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- Nur eigene Dateien (auch der Bot-Schutz ALTCHA), Kartenkacheln/Suche von OpenStreetMap und die eigene Scaleway-Funktion -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self' https://*.functions.fnc.fr-par.scw.cloud https://nominatim.openstreetmap.org; font-src 'self'; frame-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<title>The Earth Around You · Design your map · Elsewhere Maps</title>
+<meta name="description" content="Personalise your azimuthal equidistant world map: centre, title, language, units, cities and special places.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="vendor/css/tom-select.css">
+<link rel="stylesheet" href="vendor/altcha/altcha.css">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/leaflet.js" defer></script>
+<script src="vendor/js/tom-select.complete.min.js" defer></script>
+<script src="vendor/d3/d3-array.min.js" defer></script>
+<script src="vendor/d3/d3-geo.min.js" defer></script>
+<script src="vendor/d3/topojson-client.min.js" defer></script>
+<script src="vendor/d3/land.js" defer></script>
+<script src="vendor/altcha/altcha.js" defer></script>
+<script src="i18n.js" defer></script>
+<script src="cities.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<header class="masthead">
+  <nav class="uilang" aria-label="Language of this page" data-i18n-aria="ui_lang">
+    <button type="button" data-ui="en" lang="en">EN</button><button type="button" data-ui="de" lang="de">DE</button><button type="button" data-ui="fr" lang="fr">FR</button><button type="button" data-ui="es" lang="es">ES</button>
+  </nav>
+  <div class="kicker">Elsewhere Maps</div>
+  <h1>The Earth Around You</h1>
+  <div class="subhead" data-i18n="h1">Design your personalized map</div>
+  <div class="ornament" aria-hidden="true"><span></span><i></i><span></span></div>
+  <p class="lead" data-i18n="lead">Tell me how your map should look. I will design it from your choices and send you a preview before it is printed.</p>
+</header>
+
+<div class="layout">
+<main>
+<form id="order" novalidate>
+
+  <section class="card">
+    <h2><span class="num">1</span><span data-i18n="s1">Your order</span></h2>
+    <label class="field">
+      <span class="lbl"><span data-i18n="order_lbl">Etsy order number</span> <em class="req" data-i18n="req">required</em></span>
+      <input id="orderNo" name="orderNo" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="e.g. 3456789012" data-i18n-ph="order_ph" required>
+      <span class="hint" data-i18n="order_hint">You find it in your Etsy purchase confirmation and under “Purchases”.</span>
+    </label>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">2</span><span data-i18n="s2">Centre of the map</span></h2>
+    <p class="sub" data-i18n="s2_sub">The whole world is drawn around this point. Every distance and direction is measured from here.</p>
+    <div class="seg" role="radiogroup" aria-label="Centre">
+      <label><input type="radio" name="centreMode" value="city" checked><span data-i18n="mode_city">A city</span></label>
+      <label><input type="radio" name="centreMode" value="pin"><span data-i18n="mode_pin">A point on the map</span></label>
+    </div>
+    <div id="centreCity" class="field">
+      <span class="lbl"><span data-i18n="city_lbl">City</span> <em class="req" data-i18n="req">required</em></span>
+      <select id="centreSelect" placeholder="Start typing a city …"></select>
+      <div id="centreCheck" class="checknote" role="status" hidden></div>
+    </div>
+    <div id="centrePin" class="field" hidden>
+      <span class="lbl"><span data-i18n="pin_lbl">Search or click on the map</span> <em class="req" data-i18n="req">required</em></span>
+      <div class="search">
+        <input id="pinSearch" type="search" placeholder="Search a place or address …" data-i18n-ph="pin_ph" autocomplete="off">
+        <button type="button" id="pinSearchBtn" class="btn ghost" data-i18n="search">Search</button>
+      </div>
+      <ul id="pinResults" class="results" hidden></ul>
+      <div id="pinMap" class="map"></div>
+      <div id="pinInfo" class="hint" data-i18n="pin_none">No point chosen yet.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">3</span><span data-i18n="s3">Language and units</span></h2>
+    <div class="grid2">
+      <label class="field">
+        <span class="lbl" data-i18n="lang_lbl">Language of all labels</span>
+        <select id="lang">
+          <option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option>
+          <option value="fr">Français</option><option value="it">Italiano</option><option value="pt">Português</option>
+          <option value="no">Norsk</option><option value="tr">Türkçe</option><option value="el">Ελληνικά</option>
+          <option value="ar">العربية</option><option value="bn">বাংলা</option><option value="ja">日本語</option>
+          <option value="ko">한국어</option><option value="zh">中文</option>
+        </select>
+        <span class="hint" data-i18n="lang_hint">Headline, city names, compass and legend. City names in the lists switch to this language.</span>
+      </label>
+      <div class="field">
+        <span class="lbl" data-i18n="unit_lbl">Distances in</span>
+        <div class="seg" role="radiogroup" aria-label="Units">
+          <label><input type="radio" name="unit" value="km" checked><span data-i18n="km">Kilometres</span></label>
+          <label><input type="radio" name="unit" value="mi"><span data-i18n="mi">Miles</span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">4</span><span data-i18n="s4">Title</span></h2>
+    <label class="field">
+      <span class="lbl"><span data-i18n="title_lbl">Text at the bottom of the map</span> <em class="req" data-i18n="req">required</em><em id="titleDefault"></em></span>
+      <input id="title" maxlength="24" autocomplete="off" placeholder="e.g. Munich, Family Smith, Our Home" data-i18n-ph="title_ph">
+      <span class="hint" data-i18n="title_hint">Up to 24 characters. Short titles look best. The headline above the map reads “The Earth Around” in your language.</span>
+    </label>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">5</span><span data-i18n="s5">Cities on your map</span> <span class="opt" data-i18n="optional">optional</span></h2>
+    <p class="sub" data-i18n="s5_sub">Choose up to 15 cities that should appear on your map. It does not matter whether they would be on the map anyway: everything you choose here is shown for sure. The rest of the map is filled with major cities around the world.</p>
+    <div class="field">
+      <select id="cities" multiple placeholder="Add cities …"></select>
+      <span class="hint" data-i18n="cities_hint">Many places share a name: please check the country shown next to each city.</span>
+      <span class="hint" data-i18n="cities_lang">The list only offers cities that have a name in the language of your map, so that every label on your map is in that language.</span>
+      <div id="citiesDropped" class="checknote warn" role="status" hidden></div>
+      <div id="citiesNear" class="checknote warn" role="status" hidden></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="num">6</span><span data-i18n="s6">Special places</span> <span class="opt" data-i18n="optional">optional</span></h2>
+    <p class="sub" data-i18n="s6_sub">Where you met, got married, were born or travelled to: mark up to 8 places and give each one its own name. It appears on the map with a star and its distance.</p>
+    <p class="sub" data-i18n="s6_sub2">If you leave this empty, the map shows famous places that suit your centre instead, such as the Taj Mahal, the Titanic wreck or the Mariana Trench. Your own places take their spots.</p>
+    <div class="search">
+      <input id="placeSearch" type="search" placeholder="Search a city, place or address …" data-i18n-ph="place_ph" autocomplete="off">
+      <button type="button" id="placeSearchBtn" class="btn ghost" data-i18n="search">Search</button>
+    </div>
+    <ul id="placeResults" class="results" hidden></ul>
+    <div id="placeMap" class="map"></div>
+    <p class="hint" data-i18n="place_click">Or click anywhere on the map to set a place.</p>
+    <ol id="placeList" class="places"></ol>
+  </section>
+
+
+  <section class="card submit">
+    <label class="check">
+      <input type="checkbox" id="consent" required>
+      <span><span data-i18n="consent">I agree that my choices and my order number are stored to design my map. See the <a href="privacy.html" target="_blank" rel="noopener">privacy notice</a>.</span> <em class="req" data-i18n="req">required</em></span>
+    </label>
+    <div id="botcheck" hidden></div>
+    <div id="error" class="error" role="alert" hidden></div>
+    <p class="hint send-info" data-i18n="next"><strong>What happens next:</strong> I create your map from exactly these choices and send you a preview through Etsy Messages. Once you approve it, I order the print and it is made and shipped to you. Until then you can still change anything.</p>
+    <button type="submit" id="send" class="btn" data-i18n="send">Create my map</button>
+    <p id="sendMissing" class="hint" role="status" hidden></p>
+  </section>
+</form>
+
+<section id="done" class="card done" hidden>
+  <div class="ornament" aria-hidden="true"><span></span><i></i><span></span></div>
+  <h2 data-i18n="done_h">Thank you!</h2>
+  <p data-i18n="done_p">Your choices have arrived. I will send you a preview through Etsy messages before your map is printed.</p>
+  <p class="ref"><span data-i18n="ref">Reference:</span> <strong id="refId"></strong></p>
+  <p class="hint" data-i18n="done_hint">Made a mistake? Simply send the form again with the same order number. The latest version counts.</p>
+</section>
+</main>
+
+<!-- Vorschau: auf breiten Bildschirmen seitlich mitlaufend, sonst als Fenster ueber den Knopf -->
+<aside id="pvPanel" class="pv-panel" aria-label="Preview">
+  <div class="card pv-card" role="dialog" aria-modal="false">
+    <div class="pv-head"><h2 data-i18n="pv">Preview</h2><button type="button" id="pvClose" class="x pv-close" aria-label="Close preview" data-i18n-aria="pv_close">×</button></div>
+    <canvas id="preview" width="640" height="720" aria-label="Simplified preview of your map" data-i18n-aria="pv_aria"></canvas>
+    <p id="pvNote" class="hint" data-i18n="pv_note">Example: Berlin. Choose your centre to see your own world.</p>
+    <p class="hint" data-i18n="pv_simpl">A <u>simplified</u> sketch: the world drawn around your centre, with your cities and special places. The printed map shows the real Earth in full detail.</p>
+  </div>
+</aside>
+</div>
+<button type="button" id="pvOpen" class="btn pv-fab" data-i18n="pv">Preview</button>
+
+<footer>
+  <span>Map Design © 2026 Joseph Berkner</span>
+  <a href="imprint.html" data-i18n="imprint">Imprint</a>
+  <a href="privacy.html" data-i18n="privacy">Privacy</a>
+  <span class="osm" data-i18n="osm">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Cities: GeoNames (CC BY 4.0)</span>
+</footer>
+</body>
+</html>
