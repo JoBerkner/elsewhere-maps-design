@@ -8,28 +8,28 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self' https://*.functions.fnc.fr-par.scw.cloud https://nominatim.openstreetmap.org; font-src 'self'; frame-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
 <title>The Earth Around You · Design your map · Elsewhere Maps</title>
 <meta name="description" content="Personalise your azimuthal equidistant world map: centre, title, language, units, cities and special places.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="vendor/leaflet.css">
-<link rel="stylesheet" href="vendor/css/tom-select.css">
-<link rel="stylesheet" href="vendor/altcha/altcha.css">
-<link rel="stylesheet" href="style.css">
-<script src="vendor/leaflet.js" defer></script>
-<script src="vendor/js/tom-select.complete.min.js" defer></script>
-<script src="vendor/d3/d3-array.min.js" defer></script>
-<script src="vendor/d3/d3-geo.min.js" defer></script>
-<script src="vendor/d3/topojson-client.min.js" defer></script>
-<script src="vendor/d3/land.js" defer></script>
-<script src="vendor/altcha/altcha.js" defer></script>
-<script src="i18n.js" defer></script>
-<script src="cities.js" defer></script>
-<script src="app.js" defer></script>
+<link rel="icon" href="favicon.svg?v=202611060136" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/leaflet.css?v=202611060136">
+<link rel="stylesheet" href="vendor/css/tom-select.css?v=202611060136">
+<link rel="stylesheet" href="vendor/altcha/altcha.css?v=202611060136">
+<link rel="stylesheet" href="style.css?v=202611060136">
+<script src="vendor/leaflet.js?v=202611060136" defer></script>
+<script src="vendor/js/tom-select.complete.min.js?v=202611060136" defer></script>
+<script src="vendor/d3/d3-array.min.js?v=202611060136" defer></script>
+<script src="vendor/d3/d3-geo.min.js?v=202611060136" defer></script>
+<script src="vendor/d3/topojson-client.min.js?v=202611060136" defer></script>
+<script src="vendor/d3/land.js?v=202611060136" defer></script>
+<script src="vendor/altcha/altcha.js?v=202611060136" defer></script>
+<script src="i18n.js?v=202611060136" defer></script>
+<script src="cities.js?v=202611060136" defer></script>
+<script src="app.js?v=202611060136" defer></script>
 </head>
 <body>
 <header class="masthead">
   <nav class="uilang" aria-label="Language of this page" data-i18n-aria="ui_lang">
     <button type="button" data-ui="en" lang="en">EN</button><button type="button" data-ui="de" lang="de">DE</button><button type="button" data-ui="fr" lang="fr">FR</button><button type="button" data-ui="es" lang="es">ES</button>
   </nav>
-  <div class="brandmark"><svg aria-hidden="true" focusable="false" class="mark" xmlns="http://www.w3.org/2000/svg" viewBox="11.98 16.00 76.05 68.00"><path d="M50.00 18.50 L53.40 44.33 L55.60 50.00 L50.00 50.00 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="0.9" stroke-linejoin="miter"/><path d="M50.00 81.50 L46.60 55.67 L44.40 50.00 L50.00 50.00 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="0.9" stroke-linejoin="miter"/><path d="M50.00 18.50 L46.60 44.33 L44.40 50.00 L50.00 50.00 Z" fill="currentColor" stroke="currentColor" stroke-width="0.9" stroke-linejoin="miter"/><path d="M50.00 81.50 L53.40 55.67 L55.60 50.00 L50.00 50.00 Z" fill="currentColor" stroke="currentColor" stroke-width="0.9" stroke-linejoin="miter"/><path d="M31 0V34H115V706H31V740H442V526H414L400 633Q391 705 317 705H185V421H314V548H346V260H314V387H185V35H327Q400 35 409 108L424 234H452V0Z" fill="currentColor" transform="translate(14.476 68.000) scale(0.04865 -0.04865)"/><path d="M136 0 39 706H-21V740H153V706H104L174 197L238 591L218 740H283L358 197L441 706H398V740H524V706H474L358 0H320L254 481L174 0Z" fill="currentColor" transform="translate(61.200 68.000) scale(0.04865 -0.04865)"/></svg></div>
+  <div class="brandmark"><svg aria-hidden="true" focusable="false" class="mark" xmlns="http://www.w3.org/2000/svg" viewBox="11.98 16.00 76.05 68.00"><path d="M50.00 18.50 L53.40 44.33 L55.60 50.00 L50.00 50.00 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="0.9" stroke-linejoin="round"/><path d="M50.00 81.50 L46.60 55.67 L44.40 50.00 L50.00 50.00 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="0.9" stroke-linejoin="round"/><path d="M50.00 18.50 L46.60 44.33 L44.40 50.00 L50.00 50.00 Z" fill="currentColor" stroke="currentColor" stroke-width="0.9" stroke-linejoin="round"/><path d="M50.00 81.50 L53.40 55.67 L55.60 50.00 L50.00 50.00 Z" fill="currentColor" stroke="currentColor" stroke-width="0.9" stroke-linejoin="round"/><path d="M31 0V34H115V706H31V740H442V526H414L400 633Q391 705 317 705H185V421H314V548H346V260H314V387H185V35H327Q400 35 409 108L424 234H452V0Z" fill="currentColor" transform="translate(14.476 68.000) scale(0.04865 -0.04865)"/><path d="M136 0 39 706H-21V740H153V706H104L174 197L238 591L218 740H283L358 197L441 706H398V740H524V706H474L358 0H320L254 481L174 0Z" fill="currentColor" transform="translate(61.200 68.000) scale(0.04865 -0.04865)"/></svg></div>
   <div class="kicker">Elsewhere Maps</div>
   <h1>The Earth Around You</h1>
   <div class="subhead" data-i18n="h1">Design your personalized map</div>
@@ -137,7 +137,7 @@
   <section class="card submit">
     <label class="check">
       <input type="checkbox" id="consent" required>
-      <span><span data-i18n="consent">I agree that my choices and my order number are stored to design my map. See the <a href="privacy.html" target="_blank" rel="noopener">privacy notice</a>.</span> <em class="req" data-i18n="req">required</em></span>
+      <span><span data-i18n="consent">I agree that my choices and my order number are stored to design my map. See the <a href="https://elsewhere-maps.com/privacy.html" target="_blank" rel="noopener">privacy notice</a>.</span> <em class="req" data-i18n="req">required</em></span>
     </label>
     <div id="botcheck" hidden></div>
     <div id="error" class="error" role="alert" hidden></div>
@@ -170,8 +170,8 @@
 
 <footer>
   <span>Map Design © 2026 Joseph Berkner</span>
-  <a href="imprint.html" data-i18n="imprint">Imprint</a>
-  <a href="privacy.html" data-i18n="privacy">Privacy</a>
+  <a href="https://elsewhere-maps.com/imprint.html" target="_blank" rel="noopener" data-i18n="imprint">Imprint</a>
+  <a href="https://elsewhere-maps.com/privacy.html" target="_blank" rel="noopener" data-i18n="privacy">Privacy</a>
   <span class="osm" data-i18n="osm">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors · Cities: GeoNames (CC BY 4.0)</span>
 </footer>
 </body>
