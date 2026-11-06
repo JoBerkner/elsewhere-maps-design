@@ -136,3 +136,5 @@ body.sent .pv-fab, body.sent .pv-panel, body.pv-open .pv-fab { display: none !im
 .uilang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 @media (max-width: 600px) { .masthead { padding-top: 64px; } }
 .subhead { font-family: var(--head); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-size: clamp(15px, 2.6vw, 19px); margin: 4px 0 14px; }
+.brandmark { display: flex; justify-content: center; margin-bottom: 10px; }
+.brandmark svg.mark { height: 56px; width: auto; color: var(--ink); }
