@@ -21,7 +21,7 @@ window.UI_STRINGS = {
     s5_sub: "Choose up to 15 cities for your map. The remaining spots are filled with major cities from around the world.",
     cities_ph: "Add cities …", cities_hint: "Many places share a name: please check the country shown next to each city.",
     s6: "Special places",
-    s6_sub: "Where you met, got married, were born or travelled to: mark up to 8 places and give each one its own name. It appears on the map with a star and its distance.",
+    s6_sub: "You can also choose up to 8 special places of your own, such as where you met, got married, were born or travelled to. Give each one a name, and it appears on the map in the same way.",
     s6_sub2: "If you leave this empty, the map shows famous places that suit your centre instead, such as the Taj Mahal, the Titanic wreck or the Mariana Trench. Your own places take their spots.",
     place_ph: "Search a city, place or address …", place_click: "Or click anywhere on the map to set a place.",
     consent: 'I agree that my choices and my order number are stored to design my map. See the <a href="https://elsewhere-maps.com/privacy.html" target="_blank" rel="noopener">privacy notice</a>.',
@@ -82,7 +82,7 @@ window.UI_STRINGS = {
     s5_sub: "Wähle bis zu 15 Städte für deine Karte. Die übrigen Plätze füllen große Städte aus aller Welt.",
     cities_ph: "Städte hinzufügen …", cities_hint: "Viele Orte haben denselben Namen: Bitte prüfe das Land neben jeder Stadt.",
     s6: "Besondere Orte",
-    s6_sub: "Wo ihr euch kennengelernt, geheiratet habt, geboren wurdet oder hingereist seid: Markiere bis zu 8 Orte und gib jedem einen eigenen Namen. Er erscheint auf der Karte mit Stern und Entfernung.",
+    s6_sub: "Du kannst auch bis zu 8 eigene besondere Orte auswählen, etwa wo ihr euch kennengelernt, geheiratet habt, geboren wurdet oder hingereist seid. Gib jedem einen Namen, dann erscheint er genauso auf der Karte.",
     s6_sub2: "Bleibt das leer, zeigt die Karte stattdessen berühmte Orte, die zu deinem Mittelpunkt passen, etwa das Taj Mahal, das Titanic-Wrack oder den Marianengraben. Deine eigenen Orte nehmen ihre Plätze ein.",
     place_ph: "Stadt, Ort oder Adresse suchen …", place_click: "Oder klicke irgendwo auf die Karte, um einen Ort zu setzen.",
     consent: 'Ich bin einverstanden, dass meine Angaben und meine Bestellnummer gespeichert werden, um meine Karte zu gestalten. Siehe <a href="https://elsewhere-maps.com/privacy.html" target="_blank" rel="noopener">Datenschutzhinweis</a>.',
@@ -143,7 +143,7 @@ window.UI_STRINGS = {
     s5_sub: "Choisissez jusqu’à 15 villes pour votre carte. Les autres emplacements accueillent de grandes villes du monde entier.",
     cities_ph: "Ajouter des villes …", cities_hint: "Beaucoup de lieux portent le même nom : vérifiez le pays indiqué à côté de chaque ville.",
     s6: "Lieux particuliers",
-    s6_sub: "Là où vous vous êtes rencontrés, mariés, où vous êtes nés ou avez voyagé : marquez jusqu’à 8 lieux et donnez à chacun son propre nom. Il apparaît sur la carte avec une étoile et sa distance.",
+    s6_sub: "Vous pouvez aussi choisir jusqu’à 8 lieux particuliers à vous, comme l’endroit où vous vous êtes rencontrés ou mariés, où vous êtes nés ou que vous avez visité. Donnez un nom à chacun, il apparaîtra de la même façon sur la carte.",
     s6_sub2: "Si vous laissez ce champ vide, la carte affiche des lieux célèbres adaptés à votre centre, comme le Taj Mahal, l’épave du Titanic ou la fosse des Mariannes. Vos propres lieux prennent leur place.",
     place_ph: "Chercher une ville, un lieu ou une adresse …", place_click: "Ou cliquez n’importe où sur la carte pour placer un lieu.",
     consent: 'J’accepte que mes choix et mon numéro de commande soient enregistrés pour concevoir ma carte. Voir la <a href="https://elsewhere-maps.com/privacy.html" target="_blank" rel="noopener">politique de confidentialité</a>.',
@@ -204,7 +204,7 @@ window.UI_STRINGS = {
     s5_sub: "Elige hasta 15 ciudades para tu mapa. El resto del espacio lo ocupan grandes ciudades de todo el mundo.",
     cities_ph: "Añadir ciudades …", cities_hint: "Muchos lugares comparten nombre: comprueba el país que aparece junto a cada ciudad.",
     s6: "Lugares especiales",
-    s6_sub: "Donde os conocisteis, os casasteis, nacisteis o viajasteis: marca hasta 8 lugares y ponle a cada uno su propio nombre. Aparece en el mapa con una estrella y su distancia.",
+    s6_sub: "También puedes elegir hasta 8 lugares especiales propios, como donde os conocisteis, os casasteis, nacisteis o viajasteis. Ponle un nombre a cada uno y aparecerá igual en el mapa.",
     s6_sub2: "Si lo dejas vacío, el mapa muestra lugares famosos que encajan con tu centro, como el Taj Mahal, el pecio del Titanic o la fosa de las Marianas. Tus propios lugares ocupan su sitio.",
     place_ph: "Buscar una ciudad, un lugar o una dirección …", place_click: "O haz clic en cualquier parte del mapa para marcar un lugar.",
     consent: 'Acepto que mis elecciones y mi número de pedido se guarden para diseñar mi mapa. Consulta el <a href="https://elsewhere-maps.com/privacy.html" target="_blank" rel="noopener">aviso de privacidad</a>.',
@@ -345,3 +345,9 @@ Object.assign(window.UI_STRINGS.en, { lm_alt: "Example of a special place on the
 Object.assign(window.UI_STRINGS.de, { lm_alt: "Beispiel für einen besonderen Ort auf der Karte: das Taj Mahal mit Stern und Entfernung" });
 Object.assign(window.UI_STRINGS.fr, { lm_alt: "Exemple de lieu particulier sur la carte : le Taj Mahal avec une étoile et sa distance" });
 Object.assign(window.UI_STRINGS.es, { lm_alt: "Ejemplo de lugar especial en el mapa: el Taj Mahal con una estrella y su distancia" });
+
+// Abschnitt besondere Orte: erst allgemeine Erklaerung, dann Bild, dann eigene Orte
+window.UI_STRINGS.en.s6_intro = "Your map also shows special places with a star and their distance, for example the Taj Mahal or the North Pole.";
+window.UI_STRINGS.de.s6_intro = "Deine Karte zeigt auch besondere Orte mit einem Stern und ihrer Entfernung, zum Beispiel das Taj Mahal oder den Nordpol.";
+window.UI_STRINGS.fr.s6_intro = "Votre carte montre aussi des lieux particuliers avec une étoile et leur distance, par exemple le Taj Mahal ou le pôle Nord.";
+window.UI_STRINGS.es.s6_intro = "Tu mapa también muestra lugares especiales con una estrella y su distancia, por ejemplo el Taj Mahal o el Polo Norte.";

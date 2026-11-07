@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="vendor/leaflet.css?v=202611060136">
 <link rel="stylesheet" href="vendor/css/tom-select.css?v=202611060136">
 <link rel="stylesheet" href="vendor/altcha/altcha.css?v=202611060136">
-<link rel="stylesheet" href="style.css?v=202611071900">
+<link rel="stylesheet" href="style.css?v=202611072000">
 <script src="vendor/leaflet.js?v=202611060136" defer></script>
 <script src="vendor/js/tom-select.complete.min.js?v=202611060136" defer></script>
 <script src="vendor/d3/d3-array.min.js?v=202611060136" defer></script>
@@ -20,9 +20,9 @@
 <script src="vendor/d3/topojson-client.min.js?v=202611060136" defer></script>
 <script src="vendor/d3/land.js?v=202611060136" defer></script>
 <script src="vendor/altcha/altcha.js?v=202611060136" defer></script>
-<script src="i18n.js?v=202611071900" defer></script>
+<script src="i18n.js?v=202611072000" defer></script>
 <script src="cities.js?v=202611060136" defer></script>
-<script src="app.js?v=202611071900" defer></script>
+<script src="app.js?v=202611072000" defer></script>
 </head>
 <body>
 <header class="masthead">
@@ -125,9 +125,10 @@
 
   <section class="card">
     <h2><span class="num">6</span><span data-i18n="s6">Special places</span> <span class="opt" data-i18n="optional">optional</span></h2>
-    <p class="sub" data-i18n="s6_sub">Where you met, got married, were born or travelled to: mark up to 8 places and give each one its own name. It appears on the map with a star and its distance.</p>
+    <p class="sub" data-i18n="s6_intro">Your map also shows special places with a star and their distance, for example the Taj Mahal or the North Pole.</p>
     <img id="lmExample" class="lm-pic intro" src="img_landmark_example_en.jpg" data-i18n-src="lm_img" width="1410" height="640" alt="Example of a special place on the map: the Taj Mahal with a star and its distance" data-i18n-alt="lm_alt">
-    <p class="sub" data-i18n="s6_sub2">If you leave this empty, the map shows famous places that suit your centre instead, such as the Taj Mahal, the Titanic wreck or the Mariana Trench. Your own places take their spots.</p>
+    <p class="sub" data-i18n="s6_sub">You can also choose up to 8 special places of your own, such as where you met, got married, were born or travelled to. Give each one a name, and it appears on the map in the same way.</p>
+    <p class="sub" data-i18n="s6_sub2">Search or click on the map: an orange star marks the spot. Give it a name and add it. Only added places go on your map.</p>
     <div class="search">
       <input id="placeSearch" type="search" placeholder="Search a city, place or address …" data-i18n-ph="place_ph" autocomplete="off">
       <button type="button" id="placeSearchBtn" class="btn ghost" data-i18n="search">Search</button>

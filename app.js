@@ -48,6 +48,13 @@ function rank(q, k, alts, pop) {
 }
 
 const sortKey = (k) => k.replace(/^[^\p{L}]+/u, "");   // fuehrende Zeichen wie ' oder * nicht mitsortieren
+/** Reihenfolge ohne Suchtext als Zahl (ord): erst Grossstaedte ab 1 Mio., dann alle, je alphabetisch
+ *  in der Kartensprache. Vorberechnet, weil Tom Select sonst bei jedem Oeffnen 39 000 Namen vergleicht (~1 s). */
+function setOrder(ts) {
+  const idx = state.cities.map((c, i) => [c[4] >= 1e6 ? 0 : 1, sortKey(state.keys[i][0]), i]);
+  idx.sort((a, b) => a[0] - b[0] || (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0));
+  idx.forEach(([, , i], n) => { const o = ts.options[String(i)]; if (o) o.ord = n; });
+}
 
 const state = {
   cities: [],            // [name, cc, lat, lon, pop, andere namen]
@@ -500,7 +507,7 @@ function applyUI() {
   for (const [id, key] of [["centreSelect", "city_ph"], ["cities", "cities_ph"]]) {
     const ts = $(id).tomselect; if (!ts) continue;
     ts.settings.placeholder = t(key); ts.control_input.setAttribute("placeholder", t(key));
-    ts.clearCache(); ts.refreshItems(); ts.refreshOptions(false);
+    ts.clearCache(); ts.refreshItems(); if (ts.isOpen) ts.refreshOptions(false);
   }
   if (state.sending) $("send").textContent = t("sending");
   updateTitleRequirement(); centreCheck(state.centre); renderPlaces(); botStrings(); updateSend();
@@ -660,7 +667,7 @@ async function init() {
   state.baseKeys = state.cities.map((c) => [norm(c[0]), c[5] ? c[5].split("|").map(norm) : []]);
   state.keys = state.baseKeys;
   // sname: Name in der Kartensprache, normalisiert - ohne Suchtext alphabetisch (sonst stuenden Millionenstaedte wie Chongqing oben)
-  const opts = state.cities.map((c, i) => ({ value: String(i), text: c[0], pop: c[4], i, big: c[4] >= 1e6 ? 1 : 0, sname: sortKey(state.baseKeys[i][0]) }));
+  const opts = state.cities.map((c, i) => ({ value: String(i), text: c[0], pop: c[4], i, ord: 0 }));
   const where = (d) => { const c = state.cities[d.i]; return (c[6] ? c[6] + ", " : "") + regionName(c[1]); };
   // angezeigt wird der Name in der gewaehlten Sprache, klein dahinter der uebliche Name, falls anders
   const label = (d, esc) => { const n = cityName(d.i); return esc(n) + (n !== d.text ? `<span class="cc">${esc(d.text)}</span>` : ""); };
@@ -671,7 +678,7 @@ async function init() {
   };
   // mit Suchtext: Rangfolge nach Treffer und Einwohnern; ohne Suchtext: erst Grossstaedte (ab 1 Mio.) alphabetisch
   const score = (search) => { const q = norm(search.trim()); return (o) => rank(q, state.keys[o.i][0], state.keys[o.i][1], o.pop); };
-  const common = { options: opts, searchField: ["text"], maxOptions: 40, render, score, sortField: [{ field: "$score", direction: "desc" }, { field: "big", direction: "desc" }, { field: "sname", direction: "asc" }] };
+  const common = { options: opts, searchField: ["text"], maxOptions: 40, render, score, sortField: [{ field: "$score", direction: "desc" }, { field: "ord", direction: "asc" }] };
   centreTS = new TomSelect("#centreSelect", { ...common, maxItems: 1, allowEmptyOption: true,
     onChange: (v) => pickCity(v) });
   new TomSelect("#cities", { ...common, maxItems: CONFIG.MAX_CITIES, plugins: ["remove_button"],
@@ -699,7 +706,7 @@ async function init() {
     box.hidden = !drop.length;
     box.textContent = drop.length ? t("dropped", { names: drop.map((i) => state.cities[+i][0]).join(", "), lang: $("lang").selectedOptions[0].text }) : "";
     for (const ts of [centreTS, citiesTS]) {
-      for (const o of Object.values(ts.options)) o.sname = sortKey(state.keys[o.i][0]);
+      setOrder(ts);
       ts.clearCache(); ts.refreshItems();
     }
     if (state.centre) setCentre(state.centre); else drawPreview();
