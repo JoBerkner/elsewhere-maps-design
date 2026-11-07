@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="vendor/leaflet.css?v=202611060136">
 <link rel="stylesheet" href="vendor/css/tom-select.css?v=202611060136">
 <link rel="stylesheet" href="vendor/altcha/altcha.css?v=202611060136">
-<link rel="stylesheet" href="style.css?v=202611071400">
+<link rel="stylesheet" href="style.css?v=202611071900">
 <script src="vendor/leaflet.js?v=202611060136" defer></script>
 <script src="vendor/js/tom-select.complete.min.js?v=202611060136" defer></script>
 <script src="vendor/d3/d3-array.min.js?v=202611060136" defer></script>
@@ -20,9 +20,9 @@
 <script src="vendor/d3/topojson-client.min.js?v=202611060136" defer></script>
 <script src="vendor/d3/land.js?v=202611060136" defer></script>
 <script src="vendor/altcha/altcha.js?v=202611060136" defer></script>
-<script src="i18n.js?v=202611071400" defer></script>
+<script src="i18n.js?v=202611071900" defer></script>
 <script src="cities.js?v=202611060136" defer></script>
-<script src="app.js?v=202611071400" defer></script>
+<script src="app.js?v=202611071900" defer></script>
 </head>
 <body>
 <header class="masthead">
@@ -113,11 +113,11 @@
 
   <section class="card">
     <h2><span class="num">5</span><span data-i18n="s5">Cities on your map</span> <span class="opt" data-i18n="optional">optional</span></h2>
-    <p class="sub" data-i18n="s5_sub">Choose up to 15 cities that should appear on your map. It does not matter whether they would be on the map anyway: everything you choose here is shown for sure. The rest of the map is filled with major cities around the world.</p>
+    <p class="sub" data-i18n="s5_sub">Choose up to 15 cities for your map. The remaining spots are filled with major cities from around the world.</p>
     <div class="field">
       <select id="cities" multiple placeholder="Add cities …"></select>
       <span class="hint" data-i18n="cities_hint">Many places share a name: please check the country shown next to each city.</span>
-      <span class="hint" data-i18n="cities_lang">The list only offers cities that have a name in the language of your map, so that every label on your map is in that language.</span>
+      <span class="hint" data-i18n="cities_lang">The list only offers cities that have a name in the language of your map. This makes sure everything on your map stays in one language.</span>
       <div id="citiesDropped" class="checknote warn" role="status" hidden></div>
       <div id="citiesNear" class="checknote warn" role="status" hidden></div>
     </div>
@@ -126,6 +126,7 @@
   <section class="card">
     <h2><span class="num">6</span><span data-i18n="s6">Special places</span> <span class="opt" data-i18n="optional">optional</span></h2>
     <p class="sub" data-i18n="s6_sub">Where you met, got married, were born or travelled to: mark up to 8 places and give each one its own name. It appears on the map with a star and its distance.</p>
+    <img id="lmExample" class="lm-pic intro" src="img_landmark_example_en.jpg" data-i18n-src="lm_img" width="1410" height="640" alt="Example of a special place on the map: the Taj Mahal with a star and its distance" data-i18n-alt="lm_alt">
     <p class="sub" data-i18n="s6_sub2">If you leave this empty, the map shows famous places that suit your centre instead, such as the Taj Mahal, the Titanic wreck or the Mariana Trench. Your own places take their spots.</p>
     <div class="search">
       <input id="placeSearch" type="search" placeholder="Search a city, place or address …" data-i18n-ph="place_ph" autocomplete="off">
@@ -141,16 +142,21 @@
         <button type="button" id="draftAdd" class="btn" data-i18n="draft_add" disabled>Add place</button>
         <button type="button" id="draftDrop" class="btn ghost" data-i18n="draft_drop">Discard</button>
       </div>
+      <p id="draftMax" class="maxwarn" role="status" hidden></p>
       <p class="hint" data-i18n="draft_hint">Give the orange star a name and add it. Click the map again to move it.</p>
     </div>
     <ol id="placeList" class="places"></ol>
     <div id="lmOpt" class="lm-opt" hidden>
-      <label class="check"><input type="checkbox" id="landmarks" checked><span data-i18n="lm_lbl">Also show famous places, such as Uluru, the Taj Mahal, Mount Everest or the North Pole</span></label>
-      <figure id="lmExample" class="lm-example">
-        <img class="lm-pic" src="img_landmark_example_en.jpg" data-i18n-src="lm_img" width="1380" height="640" alt="Detail of a map: India with the famous place Taj Mahal, marked with a star and its distance" data-i18n-alt="lm_alt" loading="lazy">
-        <figcaption data-i18n="lm_cap">Example: a famous place on your map (marked in orange). Your own places are always shown.</figcaption>
-      </figure>
-      <p class="hint" data-i18n="lm_hint">Untick the box to show only your own special places. Famous places include mountains and the poles.</p>
+      <h3 class="lm-head"><span class="lm-star" aria-hidden="true">★</span><span data-i18n="lm_head">More special places?</span></h3>
+      <div class="lm-body">
+        <div class="lm-choice">
+          <p id="lmQ" data-i18n="lm_q">Should I also add well-known special places, such as the Taj Mahal or the North Pole, where there is room on your map?</p>
+          <div class="lm-radios" role="radiogroup" aria-labelledby="lmQ">
+            <label class="lm-radio"><input type="radio" name="lmChoice" value="yes" checked><span data-i18n="lm_yes">Yes, add some where they fit</span></label>
+            <label class="lm-radio"><input type="radio" name="lmChoice" value="no"><span data-i18n="lm_no">No, only my own places</span></label>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

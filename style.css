@@ -156,9 +156,17 @@ body.sent .pv-fab, body.sent .pv-panel, body.pv-open .pv-fab { display: none !im
 .draft-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .draft-row input { flex: 1 1 200px; min-width: 0; padding: 8px 12px; }
 .draft .hint { margin: 8px 0 0; }
-/* bekannte Orte: Auswahl mit Beispielbild */
-.lm-opt { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--soft); }
-.lm-example { margin: 12px 0 6px; }
-.lm-pic { display: block; width: 100%; max-width: 560px; height: auto; transition: opacity .2s, filter .2s; }
-.lm-example.off .lm-pic { opacity: .35; filter: grayscale(1); }
-.lm-example figcaption { margin-top: 6px; color: var(--muted); font-size: 13px; }
+/* besondere Orte: automatisch ergaenzen ja/nein, mit Beispielbild */
+.lm-opt { margin-top: 18px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+.lm-head { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+.lm-star { font-size: 18px; }
+.lm-body { display: grid; gap: 14px; }
+.lm-choice p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+.lm-radios { display: grid; gap: 8px; }
+.lm-radio { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-size: 15px; }
+.lm-radio:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.lm-radio input { width: 18px; height: 18px; margin: 0; accent-color: var(--ink); }
+.lm-pic { display: block; width: 100%; height: auto; transition: opacity .2s, filter .2s; }
+.lm-pic.intro { max-width: 520px; margin: 4px 0 14px; }
+.maxwarn { display: block; margin: 6px 0 0; color: #a15c00; font-size: 13px; font-weight: 600; }
+.maxwarn[hidden], .maxwarn:empty { display: none; }

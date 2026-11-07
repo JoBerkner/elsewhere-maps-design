@@ -18,7 +18,7 @@ window.UI_STRINGS = {
     title_ph: "e.g. Munich, Family Smith, Our Home",
     title_hint: "Up to 24 characters. Short titles look best. The headline above the map reads “The Earth Around” in your language.",
     s5: "Cities on your map",
-    s5_sub: "Choose up to 15 cities that should appear on your map. It does not matter whether they would be on the map anyway: everything you choose here is shown for sure. The rest of the map is filled with major cities around the world.",
+    s5_sub: "Choose up to 15 cities for your map. The remaining spots are filled with major cities from around the world.",
     cities_ph: "Add cities …", cities_hint: "Many places share a name: please check the country shown next to each city.",
     s6: "Special places",
     s6_sub: "Where you met, got married, were born or travelled to: mark up to 8 places and give each one its own name. It appears on the map with a star and its distance.",
@@ -56,7 +56,7 @@ window.UI_STRINGS = {
     e_ts: "The security check could not load. Please reload the page or allow challenges.cloudflare.com.",
     e_page: "The page could not load. Please reload it.",
     local: "Local file mode: map tiles may be blocked. Start ./start_local.sh and open http://localhost:8765 instead.",
-    cities_lang: "The list only offers cities that have a name in the language of your map, so that every label on your map is in that language.",
+    cities_lang: "The list only offers cities that have a name in the language of your map. This makes sure everything on your map stays in one language.",
     dropped: "Removed because they have no name in {lang}: {names}.",
     title_noname: "this city has no name in the language of your map, please type your title",
     bot_label: "Security check", bot_verifying: "Checking that you are human …", bot_verified: "Security check passed", bot_error: "The security check failed. Please try again.", bot_expired: "The security check expired. Please try again.", bot_required: "Please wait for the security check.", bot_verify: "Check",
@@ -79,7 +79,7 @@ window.UI_STRINGS = {
     title_ph: "z. B. München, Familie Schmidt, Unser Zuhause",
     title_hint: "Bis zu 24 Zeichen. Kurze Titel sehen am besten aus. Über der Karte steht „Die Erde um“ in deiner Sprache.",
     s5: "Städte auf deiner Karte",
-    s5_sub: "Wähle bis zu 15 Städte, die auf deiner Karte stehen sollen. Ob sie ohnehin drauf wären, spielt keine Rolle: Alles, was du hier wählst, wird sicher gezeigt. Den Rest der Karte füllen große Städte aus aller Welt.",
+    s5_sub: "Wähle bis zu 15 Städte für deine Karte. Die übrigen Plätze füllen große Städte aus aller Welt.",
     cities_ph: "Städte hinzufügen …", cities_hint: "Viele Orte haben denselben Namen: Bitte prüfe das Land neben jeder Stadt.",
     s6: "Besondere Orte",
     s6_sub: "Wo ihr euch kennengelernt, geheiratet habt, geboren wurdet oder hingereist seid: Markiere bis zu 8 Orte und gib jedem einen eigenen Namen. Er erscheint auf der Karte mit Stern und Entfernung.",
@@ -117,7 +117,7 @@ window.UI_STRINGS = {
     e_ts: "Die Sicherheitsprüfung konnte nicht geladen werden. Bitte lade die Seite neu oder erlaube challenges.cloudflare.com.",
     e_page: "Die Seite konnte nicht geladen werden. Bitte lade sie neu.",
     local: "Als Datei geöffnet: Die Kartenkacheln werden evtl. blockiert. Starte ./start_local.sh und öffne http://localhost:8765.",
-    cities_lang: "Die Liste bietet nur Städte an, die in der Sprache deiner Karte einen Namen haben – so steht alles auf deiner Karte in dieser Sprache.",
+    cities_lang: "Die Liste bietet nur Städte an, die in der Sprache deiner Karte einen Namen haben. Damit wird sichergestellt, dass auf deiner Karte alles in einer Sprache bleibt.",
     dropped: "Entfernt, weil es sie auf {lang} nicht gibt: {names}.",
     title_noname: "diese Stadt hat in der Sprache deiner Karte keinen Namen, bitte gib deinen Titel ein",
     bot_label: "Sicherheitsprüfung", bot_verifying: "Prüfung läuft …", bot_verified: "Sicherheitsprüfung bestanden", bot_error: "Die Sicherheitsprüfung ist fehlgeschlagen. Bitte versuche es noch einmal.", bot_expired: "Die Sicherheitsprüfung ist abgelaufen. Bitte versuche es noch einmal.", bot_required: "Bitte warte auf die Sicherheitsprüfung.", bot_verify: "Prüfen",
@@ -140,7 +140,7 @@ window.UI_STRINGS = {
     title_ph: "p. ex. Paris, Famille Martin, Chez nous",
     title_hint: "Jusqu’à 24 caractères. Les titres courts sont les plus beaux. Au-dessus de la carte figure « La Terre autour de » dans votre langue.",
     s5: "Villes sur votre carte",
-    s5_sub: "Choisissez jusqu’à 15 villes qui doivent figurer sur votre carte. Peu importe qu’elles y soient déjà : tout ce que vous choisissez ici sera affiché. Le reste de la carte est complété par de grandes villes du monde entier.",
+    s5_sub: "Choisissez jusqu’à 15 villes pour votre carte. Les autres emplacements accueillent de grandes villes du monde entier.",
     cities_ph: "Ajouter des villes …", cities_hint: "Beaucoup de lieux portent le même nom : vérifiez le pays indiqué à côté de chaque ville.",
     s6: "Lieux particuliers",
     s6_sub: "Là où vous vous êtes rencontrés, mariés, où vous êtes nés ou avez voyagé : marquez jusqu’à 8 lieux et donnez à chacun son propre nom. Il apparaît sur la carte avec une étoile et sa distance.",
@@ -178,7 +178,7 @@ window.UI_STRINGS = {
     e_ts: "La vérification de sécurité n’a pas pu se charger. Rechargez la page ou autorisez challenges.cloudflare.com.",
     e_page: "La page n’a pas pu se charger. Veuillez la recharger.",
     local: "Ouvert comme fichier : les tuiles de carte peuvent être bloquées. Lancez ./start_local.sh et ouvrez http://localhost:8765.",
-    cities_lang: "La liste ne propose que des villes qui ont un nom dans la langue de votre carte, pour que toutes les inscriptions soient dans cette langue.",
+    cities_lang: "La liste ne propose que des villes qui ont un nom dans la langue de votre carte. Ainsi, tout reste dans une seule langue sur votre carte.",
     dropped: "Retirées car elles n’ont pas de nom en {lang} : {names}.",
     title_noname: "cette ville n’a pas de nom dans la langue de votre carte, veuillez saisir votre titre",
     bot_label: "Vérification de sécurité", bot_verifying: "Vérification en cours …", bot_verified: "Vérification réussie", bot_error: "La vérification a échoué. Veuillez réessayer.", bot_expired: "La vérification a expiré. Veuillez réessayer.", bot_required: "Veuillez attendre la vérification.", bot_verify: "Vérifier",
@@ -201,7 +201,7 @@ window.UI_STRINGS = {
     title_ph: "p. ej. Madrid, Familia García, Nuestro hogar",
     title_hint: "Hasta 24 caracteres. Los títulos cortos quedan mejor. Encima del mapa aparece «La Tierra alrededor de» en tu idioma.",
     s5: "Ciudades en tu mapa",
-    s5_sub: "Elige hasta 15 ciudades que deben aparecer en tu mapa. Da igual si ya estarían: todo lo que elijas aquí se mostrará seguro. El resto del mapa se completa con grandes ciudades de todo el mundo.",
+    s5_sub: "Elige hasta 15 ciudades para tu mapa. El resto del espacio lo ocupan grandes ciudades de todo el mundo.",
     cities_ph: "Añadir ciudades …", cities_hint: "Muchos lugares comparten nombre: comprueba el país que aparece junto a cada ciudad.",
     s6: "Lugares especiales",
     s6_sub: "Donde os conocisteis, os casasteis, nacisteis o viajasteis: marca hasta 8 lugares y ponle a cada uno su propio nombre. Aparece en el mapa con una estrella y su distancia.",
@@ -239,7 +239,7 @@ window.UI_STRINGS = {
     e_ts: "No se ha podido cargar la comprobación de seguridad. Recarga la página o permite challenges.cloudflare.com.",
     e_page: "No se ha podido cargar la página. Recárgala.",
     local: "Abierto como archivo: puede que se bloqueen los mosaicos del mapa. Ejecuta ./start_local.sh y abre http://localhost:8765.",
-    cities_lang: "La lista solo ofrece ciudades que tienen nombre en el idioma de tu mapa, para que todos los textos del mapa estén en ese idioma.",
+    cities_lang: "La lista solo ofrece ciudades que tienen nombre en el idioma de tu mapa. Así todo en tu mapa queda en un solo idioma.",
     dropped: "Eliminadas porque no tienen nombre en {lang}: {names}.",
     title_noname: "esta ciudad no tiene nombre en el idioma de tu mapa, escribe tu título",
     bot_label: "Comprobación de seguridad", bot_verifying: "Comprobando …", bot_verified: "Comprobación superada", bot_error: "La comprobación ha fallado. Inténtalo de nuevo.", bot_expired: "La comprobación ha caducado. Inténtalo de nuevo.", bot_required: "Espera a la comprobación de seguridad.", bot_verify: "Comprobar",
@@ -311,3 +311,37 @@ Object.assign(window.UI_STRINGS.fr, { lm_tag: "un lieu célèbre", lm_alt: "Dét
 Object.assign(window.UI_STRINGS.es, { lm_tag: "un lugar famoso", lm_alt: "Detalle de un mapa: la India con el lugar famoso Taj Mahal, marcado con una estrella y su distancia", lm_cap: "Ejemplo: un lugar famoso en tu mapa. Tus propios lugares siempre aparecen." });
 // Beispielbild mit eingezeichnetem Pfeil, je Sprache
 for (const l of ["en", "de", "fr", "es"]) window.UI_STRINGS[l].lm_img = `img_landmark_example_${l}.jpg`;
+// Besondere Orte: automatisch ergaenzen ja/nein (ersetzt die Checkbox), Hinweis bei Hoechstlaenge
+Object.assign(window.UI_STRINGS.en, {
+  lm_head: "More special places?",
+  lm_q: "Should I also add well-known special places, such as the Taj Mahal or the North Pole, where there is room on your map?",
+  lm_yes: "Yes, add some where they fit", lm_no: "No, only my own places",
+  lm_alt: "Example: the Taj Mahal, added automatically as a special place with a star and its distance",
+  max_chars: "Maximum length reached ({n} characters).",
+});
+Object.assign(window.UI_STRINGS.de, {
+  lm_head: "Weitere besondere Orte?",
+  lm_q: "Soll ich zusätzlich bekannte besondere Orte wie das Taj Mahal oder den Nordpol ergänzen, wo auf deiner Karte Platz ist?",
+  lm_yes: "Ja, passend ergänzen", lm_no: "Nein, nur meine eigenen Orte",
+  lm_alt: "Beispiel: das Taj Mahal, automatisch als besonderer Ort ergänzt, mit Stern und Entfernung",
+  max_chars: "Höchstlänge erreicht ({n} Zeichen).",
+});
+Object.assign(window.UI_STRINGS.fr, {
+  lm_head: "D’autres lieux particuliers ?",
+  lm_q: "Dois-je aussi ajouter des lieux particuliers connus, comme le Taj Mahal ou le pôle Nord, là où il reste de la place sur votre carte ?",
+  lm_yes: "Oui, en ajouter là où ils tiennent", lm_no: "Non, seulement mes propres lieux",
+  lm_alt: "Exemple : le Taj Mahal, ajouté automatiquement comme lieu particulier, avec une étoile et sa distance",
+  max_chars: "Longueur maximale atteinte ({n} caractères).",
+});
+Object.assign(window.UI_STRINGS.es, {
+  lm_head: "¿Más lugares especiales?",
+  lm_q: "¿Añado también lugares especiales conocidos, como el Taj Mahal o el Polo Norte, donde haya sitio en tu mapa?",
+  lm_yes: "Sí, añadir donde quepan", lm_no: "No, solo mis propios lugares",
+  lm_alt: "Ejemplo: el Taj Mahal, añadido automáticamente como lugar especial, con una estrella y su distancia",
+  max_chars: "Longitud máxima alcanzada ({n} caracteres).",
+});
+// Beispielbild zeigt nur, was ein besonderer Ort auf der Karte ist
+Object.assign(window.UI_STRINGS.en, { lm_alt: "Example of a special place on the map: the Taj Mahal with a star and its distance" });
+Object.assign(window.UI_STRINGS.de, { lm_alt: "Beispiel für einen besonderen Ort auf der Karte: das Taj Mahal mit Stern und Entfernung" });
+Object.assign(window.UI_STRINGS.fr, { lm_alt: "Exemple de lieu particulier sur la carte : le Taj Mahal avec une étoile et sa distance" });
+Object.assign(window.UI_STRINGS.es, { lm_alt: "Ejemplo de lugar especial en el mapa: el Taj Mahal con una estrella y su distancia" });

@@ -47,6 +47,8 @@ function rank(q, k, alts, pop) {
   return s ? s + Math.log10(pop + 10) : 0;          // log10(Einwohner) < 10, bleibt also in der Stufe
 }
 
+const sortKey = (k) => k.replace(/^[^\p{L}]+/u, "");   // fuehrende Zeichen wie ' oder * nicht mitsortieren
+
 const state = {
   cities: [],            // [name, cc, lat, lon, pop, andere namen]
   keys: [],              // [name normalisiert, [andere normalisiert]]
@@ -305,13 +307,20 @@ function renderDraft() {
 }
 function dropDraft() {
   if (state.draft) { placeMap.removeLayer(state.draft.marker); state.draft = null; }
-  $("draftName").value = ""; renderDraft();
+  $("draftName").value = ""; $("draftMax").hidden = true; renderDraft();
 }
 function commitDraft() {
   const d = state.draft, name = $("draftName").value.trim();
   if (!d || !name) return;
   addPlace(d.lat, d.lon, name, d.found);
   dropDraft();
+}
+
+const lmYes = () => document.querySelector("input[name=lmChoice]:checked").value === "yes";
+/** Hinweis, sobald ein Name die Hoechstlaenge erreicht (das Feld nimmt dann nichts mehr an) */
+function maxWarn(inp, el) {
+  const full = inp.value.length >= CONFIG.PLACE_LABEL_MAX;
+  el.hidden = !full; el.textContent = full ? t("max_chars", { n: CONFIG.PLACE_LABEL_MAX }) : "";
 }
 
 function addPlace(lat, lon, label, found) {
@@ -339,7 +348,8 @@ function renderPlaces() {
     meta.textContent = [p.found, coordText(p.lat, p.lon), distText(p)].filter(Boolean).join(" · ") + " · ";
     const rq = document.createElement("span"); rq.className = "req"; rq.textContent = t("name_req", { n: CONFIG.PLACE_LABEL_MAX }); meta.append(rq);
     rq.hidden = !!p.label.trim();                      // Pflichthinweis nur, solange der Name fehlt
-    inp.addEventListener("input", () => { rq.hidden = !!inp.value.trim(); });
+    const mx = document.createElement("strong"); mx.className = "maxwarn"; meta.append(mx); maxWarn(inp, mx);
+    inp.addEventListener("input", () => { rq.hidden = !!inp.value.trim(); maxWarn(inp, mx); });
     if (tooClose(p)) { const w = document.createElement("strong"); w.className = "near"; w.textContent = " " + t("too_close", { n: NEAR_KM }); meta.append(w); }
     li.append(inp, x, meta);
     ol.append(li);
@@ -591,7 +601,7 @@ function collect() {
       unit: document.querySelector("input[name=unit]:checked").value,
       cities,
       places: state.places.map((p) => ({ label: p.label.trim(), lat: p.lat, lon: p.lon, found: p.found })),
-      landmarks: state.places.length ? $("landmarks").checked : true,   // ohne eigene Orte immer bekannte Orte
+      landmarks: state.places.length ? lmYes() : true,   // ohne eigene Orte immer automatisch ergaenzte Orte
       consent: true,
       altcha: state.altcha,
     },
@@ -649,7 +659,8 @@ async function init() {
   for (const c of state.cities) { const k = norm(c[0]); state.nameCount.set(k, (state.nameCount.get(k) || 0) + 1); }
   state.baseKeys = state.cities.map((c) => [norm(c[0]), c[5] ? c[5].split("|").map(norm) : []]);
   state.keys = state.baseKeys;
-  const opts = state.cities.map((c, i) => ({ value: String(i), text: c[0], pop: c[4], i }));
+  // sname: Name in der Kartensprache, normalisiert - ohne Suchtext alphabetisch (sonst stuenden Millionenstaedte wie Chongqing oben)
+  const opts = state.cities.map((c, i) => ({ value: String(i), text: c[0], pop: c[4], i, big: c[4] >= 1e6 ? 1 : 0, sname: sortKey(state.baseKeys[i][0]) }));
   const where = (d) => { const c = state.cities[d.i]; return (c[6] ? c[6] + ", " : "") + regionName(c[1]); };
   // angezeigt wird der Name in der gewaehlten Sprache, klein dahinter der uebliche Name, falls anders
   const label = (d, esc) => { const n = cityName(d.i); return esc(n) + (n !== d.text ? `<span class="cc">${esc(d.text)}</span>` : ""); };
@@ -658,8 +669,9 @@ async function init() {
     item: (d, esc) => `<div>${esc(cityName(d.i))}<span class="cc">${esc(where(d))}</span></div>`,
     no_results: (d, esc) => `<div class="no-results">${esc(t("no_city"))}</div>`,
   };
+  // mit Suchtext: Rangfolge nach Treffer und Einwohnern; ohne Suchtext: erst Grossstaedte (ab 1 Mio.) alphabetisch
   const score = (search) => { const q = norm(search.trim()); return (o) => rank(q, state.keys[o.i][0], state.keys[o.i][1], o.pop); };
-  const common = { options: opts, searchField: ["text"], maxOptions: 40, render, score, sortField: [{ field: "$score", direction: "desc" }] };
+  const common = { options: opts, searchField: ["text"], maxOptions: 40, render, score, sortField: [{ field: "$score", direction: "desc" }, { field: "big", direction: "desc" }, { field: "sname", direction: "asc" }] };
   centreTS = new TomSelect("#centreSelect", { ...common, maxItems: 1, allowEmptyOption: true,
     onChange: (v) => pickCity(v) });
   new TomSelect("#cities", { ...common, maxItems: CONFIG.MAX_CITIES, plugins: ["remove_button"],
@@ -686,7 +698,10 @@ async function init() {
     const box = $("citiesDropped");
     box.hidden = !drop.length;
     box.textContent = drop.length ? t("dropped", { names: drop.map((i) => state.cities[+i][0]).join(", "), lang: $("lang").selectedOptions[0].text }) : "";
-    for (const ts of [centreTS, citiesTS]) { ts.clearCache(); ts.refreshItems(); }
+    for (const ts of [centreTS, citiesTS]) {
+      for (const o of Object.values(ts.options)) o.sname = sortKey(state.keys[o.i][0]);
+      ts.clearCache(); ts.refreshItems();
+    }
     if (state.centre) setCentre(state.centre); else drawPreview();
     updateTitleRequirement();
   };
@@ -719,7 +734,7 @@ async function init() {
   $("draftName").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); commitDraft(); } });
   $("draftAdd").addEventListener("click", commitDraft);
   $("draftDrop").addEventListener("click", dropDraft);
-  $("landmarks").addEventListener("change", () => { $("lmExample").classList.toggle("off", !$("landmarks").checked); });
+  $("draftName").addEventListener("input", () => maxWarn($("draftName"), $("draftMax")));
   $("centreMini").addEventListener("click", () => pvShow(true));
   // Suche fuer die Mitte, sobald die Karte dafuer existiert
   wireSearch($("pinSearch"), $("pinSearchBtn"), $("pinResults"), (it) => {
