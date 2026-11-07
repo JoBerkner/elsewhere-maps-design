@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="vendor/leaflet.css?v=202611060136">
 <link rel="stylesheet" href="vendor/css/tom-select.css?v=202611060136">
 <link rel="stylesheet" href="vendor/altcha/altcha.css?v=202611060136">
-<link rel="stylesheet" href="style.css?v=202611061930">
+<link rel="stylesheet" href="style.css?v=202611071400">
 <script src="vendor/leaflet.js?v=202611060136" defer></script>
 <script src="vendor/js/tom-select.complete.min.js?v=202611060136" defer></script>
 <script src="vendor/d3/d3-array.min.js?v=202611060136" defer></script>
@@ -20,9 +20,9 @@
 <script src="vendor/d3/topojson-client.min.js?v=202611060136" defer></script>
 <script src="vendor/d3/land.js?v=202611060136" defer></script>
 <script src="vendor/altcha/altcha.js?v=202611060136" defer></script>
-<script src="i18n.js?v=202611060136" defer></script>
+<script src="i18n.js?v=202611071400" defer></script>
 <script src="cities.js?v=202611060136" defer></script>
-<script src="app.js?v=202611060136" defer></script>
+<script src="app.js?v=202611071400" defer></script>
 </head>
 <body>
 <header class="masthead">
@@ -72,6 +72,10 @@
       <div id="pinMap" class="map"></div>
       <div id="pinInfo" class="hint" data-i18n="pin_none">No point chosen yet.</div>
     </div>
+    <button type="button" id="centreMini" class="centre-mini" hidden aria-label="Show preview" data-i18n-aria="mini_open">
+      <canvas id="centreMiniCanvas" width="320" height="360" aria-hidden="true"></canvas>
+      <span data-i18n="mini_open">Show preview</span>
+    </button>
   </section>
 
   <section class="card">
@@ -130,7 +134,24 @@
     <ul id="placeResults" class="results" hidden></ul>
     <div id="placeMap" class="map"></div>
     <p class="hint" data-i18n="place_click">Or click anywhere on the map to set a place.</p>
+    <div id="placeDraft" class="draft" hidden>
+      <div class="draft-head"><span class="draft-dot" aria-hidden="true">★</span><strong data-i18n="draft_lbl">New place</strong> <span id="draftMeta" class="meta"></span></div>
+      <div class="draft-row">
+        <input id="draftName" maxlength="15" autocomplete="off" placeholder="Name on the map, e.g. Where we met" data-i18n-ph="place_name_ph">
+        <button type="button" id="draftAdd" class="btn" data-i18n="draft_add" disabled>Add place</button>
+        <button type="button" id="draftDrop" class="btn ghost" data-i18n="draft_drop">Discard</button>
+      </div>
+      <p class="hint" data-i18n="draft_hint">Give the orange star a name and add it. Click the map again to move it.</p>
+    </div>
     <ol id="placeList" class="places"></ol>
+    <div id="lmOpt" class="lm-opt" hidden>
+      <label class="check"><input type="checkbox" id="landmarks" checked><span data-i18n="lm_lbl">Also show famous places, such as Uluru, the Taj Mahal, Mount Everest or the North Pole</span></label>
+      <figure id="lmExample" class="lm-example">
+        <img class="lm-pic" src="img_landmark_example_en.jpg" data-i18n-src="lm_img" width="1380" height="640" alt="Detail of a map: India with the famous place Taj Mahal, marked with a star and its distance" data-i18n-alt="lm_alt" loading="lazy">
+        <figcaption data-i18n="lm_cap">Example: a famous place on your map (marked in orange). Your own places are always shown.</figcaption>
+      </figure>
+      <p class="hint" data-i18n="lm_hint">Untick the box to show only your own special places. Famous places include mountains and the poles.</p>
+    </div>
   </section>
 
 

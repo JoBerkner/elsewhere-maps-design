@@ -246,3 +246,68 @@ window.UI_STRINGS = {
     ui_lang: "Idioma de esta página",
   },
 };
+
+// Ergaenzungen 07.11.2026: Mitte bleibt beim Umschalten, Orte erst als Entwurf, bekannte Orte waehlbar
+Object.assign(window.UI_STRINGS.en, {
+  pin_current: "Current centre: {name} (from the city list). Click the map to choose a different point instead.",
+  centre_is_pin: "Current centre: the point chosen on the map ({where}). Pick a city here to use it instead.",
+  mini_open: "Show preview",
+  s6_sub2: "Search or click on the map: an orange star marks the spot. Give it a name and add it. Only added places go on your map.",
+  place_click: "Or click anywhere on the map to mark a place.",
+  draft_lbl: "New place", draft_add: "Add place", draft_drop: "Discard",
+  draft_hint: "Give the orange star a name and add it. Click the map again or drag the star to move it.",
+  m_draft: "add or discard the new place (orange star)",
+  lm_lbl: "Also show famous places, such as Uluru, the Taj Mahal, Mount Everest or the North Pole",
+  lm_alt: "Detail of a map: Australia with the famous place Uluru, marked with a star and its distance",
+  lm_cap: "Example: a famous place on your map (marked in orange). Your own places are always shown.",
+  lm_hint: "Untick the box to show only your own special places. Famous places include mountains and the poles.",
+});
+Object.assign(window.UI_STRINGS.de, {
+  pin_current: "Aktuelle Mitte: {name} (aus der Städteliste). Klicke auf die Karte, um stattdessen einen Punkt zu wählen.",
+  centre_is_pin: "Aktuelle Mitte: der Punkt auf der Karte ({where}). Wähle hier eine Stadt, um sie stattdessen zu nehmen.",
+  mini_open: "Vorschau ansehen",
+  s6_sub2: "Suche oder klicke auf die Karte: Ein oranger Stern markiert die Stelle. Gib ihr einen Namen und füge sie hinzu. Nur hinzugefügte Orte kommen auf deine Karte.",
+  place_click: "Oder klicke irgendwo auf die Karte, um einen Ort zu markieren.",
+  draft_lbl: "Neuer Ort", draft_add: "Ort hinzufügen", draft_drop: "Verwerfen",
+  draft_hint: "Gib dem orangen Stern einen Namen und füge ihn hinzu. Zum Verschieben erneut auf die Karte klicken oder den Stern ziehen.",
+  m_draft: "den neuen Ort (oranger Stern) hinzufügen oder verwerfen",
+  lm_lbl: "Auch bekannte Orte zeigen, etwa Uluru, das Taj Mahal, den Mount Everest oder den Nordpol",
+  lm_alt: "Kartenausschnitt: Australien mit dem bekannten Ort Uluru, markiert mit Stern und Entfernung",
+  lm_cap: "Beispiel: ein bekannter Ort auf deiner Karte (orange markiert). Deine eigenen Orte erscheinen immer.",
+  lm_hint: "Ohne Häkchen zeigt die Karte nur deine eigenen besonderen Orte. Zu den bekannten Orten zählen auch Berge und die Pole.",
+});
+Object.assign(window.UI_STRINGS.fr, {
+  pin_current: "Centre actuel : {name} (liste des villes). Cliquez sur la carte pour choisir un autre point.",
+  centre_is_pin: "Centre actuel : le point choisi sur la carte ({where}). Choisissez une ville ici pour la prendre à la place.",
+  mini_open: "Voir l’aperçu",
+  s6_sub2: "Cherchez ou cliquez sur la carte : une étoile orange marque l’endroit. Donnez-lui un nom et ajoutez-le. Seuls les lieux ajoutés figurent sur votre carte.",
+  place_click: "Ou cliquez n’importe où sur la carte pour marquer un lieu.",
+  draft_lbl: "Nouveau lieu", draft_add: "Ajouter le lieu", draft_drop: "Annuler",
+  draft_hint: "Donnez un nom à l’étoile orange et ajoutez-la. Pour la déplacer, cliquez à nouveau sur la carte ou faites-la glisser.",
+  m_draft: "ajouter ou annuler le nouveau lieu (étoile orange)",
+  lm_lbl: "Afficher aussi des lieux célèbres, comme Uluru, le Taj Mahal, l’Everest ou le pôle Nord",
+  lm_alt: "Détail d’une carte : l’Australie avec le lieu célèbre Uluru, marqué d’une étoile et de sa distance",
+  lm_cap: "Exemple : un lieu célèbre sur votre carte (entouré en orange). Vos propres lieux sont toujours affichés.",
+  lm_hint: "Décochez la case pour n’afficher que vos propres lieux. Les lieux célèbres incluent aussi des montagnes et les pôles.",
+});
+Object.assign(window.UI_STRINGS.es, {
+  pin_current: "Centro actual: {name} (de la lista de ciudades). Haz clic en el mapa para elegir otro punto.",
+  centre_is_pin: "Centro actual: el punto elegido en el mapa ({where}). Elige aquí una ciudad para usarla en su lugar.",
+  mini_open: "Ver vista previa",
+  s6_sub2: "Busca o haz clic en el mapa: una estrella naranja marca el lugar. Ponle un nombre y añádelo. Solo los lugares añadidos aparecen en tu mapa.",
+  place_click: "O haz clic en cualquier parte del mapa para marcar un lugar.",
+  draft_lbl: "Nuevo lugar", draft_add: "Añadir lugar", draft_drop: "Descartar",
+  draft_hint: "Ponle un nombre a la estrella naranja y añádela. Para moverla, haz clic de nuevo en el mapa o arrástrala.",
+  m_draft: "añadir o descartar el nuevo lugar (estrella naranja)",
+  lm_lbl: "Mostrar también lugares famosos, como Uluru, el Taj Mahal, el Everest o el Polo Norte",
+  lm_alt: "Detalle de un mapa: Australia con el lugar famoso Uluru, marcado con una estrella y su distancia",
+  lm_cap: "Ejemplo: un lugar famoso en tu mapa (marcado en naranja). Tus propios lugares siempre aparecen.",
+  lm_hint: "Desmarca la casilla para mostrar solo tus propios lugares. Los lugares famosos incluyen también montañas y los polos.",
+});
+// Beispielbild bekannte Orte: Taj Mahal mit handschriftlichem Pfeil
+Object.assign(window.UI_STRINGS.en, { lm_tag: "a famous place", lm_alt: "Detail of a map: India with the famous place Taj Mahal, marked with a star and its distance", lm_cap: "Example: a famous place on your map. Your own places are always shown." });
+Object.assign(window.UI_STRINGS.de, { lm_tag: "ein bekannter Ort", lm_alt: "Kartenausschnitt: Indien mit dem bekannten Ort Taj Mahal, markiert mit Stern und Entfernung", lm_cap: "Beispiel: ein bekannter Ort auf deiner Karte. Deine eigenen Orte erscheinen immer." });
+Object.assign(window.UI_STRINGS.fr, { lm_tag: "un lieu célèbre", lm_alt: "Détail d’une carte : l’Inde avec le lieu célèbre Taj Mahal, marqué d’une étoile et de sa distance", lm_cap: "Exemple : un lieu célèbre sur votre carte. Vos propres lieux sont toujours affichés." });
+Object.assign(window.UI_STRINGS.es, { lm_tag: "un lugar famoso", lm_alt: "Detalle de un mapa: la India con el lugar famoso Taj Mahal, marcado con una estrella y su distancia", lm_cap: "Ejemplo: un lugar famoso en tu mapa. Tus propios lugares siempre aparecen." });
+// Beispielbild mit eingezeichnetem Pfeil, je Sprache
+for (const l of ["en", "de", "fr", "es"]) window.UI_STRINGS[l].lm_img = `img_landmark_example_${l}.jpg`;

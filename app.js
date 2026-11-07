@@ -185,6 +185,7 @@ function makeMap(el) {
   return map;
 }
 const starIcon = () => L.divIcon({ className: "", html: '<div style="font-size:26px;line-height:26px;color:#182434;text-shadow:0 0 3px #fff,0 0 6px #fff">★</div>', iconSize: [26, 26], iconAnchor: [13, 14] });
+const draftIcon = () => L.divIcon({ className: "", html: '<div class="draft-star">★</div>', iconSize: [34, 34], iconAnchor: [17, 18] });
 const crossIcon = () => L.divIcon({ className: "", html: '<div style="width:34px;height:34px;position:relative"><div style="position:absolute;left:16px;top:0;width:3px;height:34px;background:#182434;box-shadow:0 0 0 2px #fff"></div><div style="position:absolute;top:16px;left:0;height:3px;width:34px;background:#182434;box-shadow:0 0 0 2px #fff"></div></div>', iconSize: [34, 34], iconAnchor: [17, 17] });
 
 // ------------------------------------------------------------------ Mitte
@@ -193,6 +194,11 @@ let pinMap = null, pinMarker = null, centreTS = null;
 /** Hinweis unter der Stadtwahl: welche Stadt genau gewaehlt ist, Warnung bei gleichen Namen */
 function centreCheck(c) {
   const box = $("centreCheck");
+  if (c && c.mode === "pin") {                        // aktuelle Mitte kommt von der Karte
+    box.classList.remove("warn");
+    box.textContent = t("centre_is_pin", { where: (c.name ? c.name + " · " : "") + coordText(c.lat, c.lon) });
+    box.hidden = false; return;
+  }
   if (!c || c.mode !== "city" || c.i === undefined) { box.hidden = true; return; }
   const k = state.cities[c.i];
   const where = [k[6], regionName(k[1])].filter(Boolean).join(", ");
@@ -212,6 +218,8 @@ function centreCheck(c) {
 function setCentre(c) {
   state.centre = c;
   centreCheck(c);
+  pinInfo();
+  $("centreMini").hidden = !c;
   if (!state.titleTouched) $("title").value = c && c.mode === "city" && hasName(c.i) ? cityName(c.i).slice(0, CONFIG.TITLE_MAX) : "";
   updateTitleRequirement();
   renderPlaces();
@@ -222,9 +230,24 @@ function setPin(lat, lon, name) {
   if (!pinMarker) pinMarker = L.marker([lat, lon], { icon: crossIcon(), draggable: true }).addTo(pinMap)
     .on("dragend", (e) => { const p = e.target.getLatLng(); setPin(p.lat, p.lng); });
   else pinMarker.setLatLng([lat, lon]);
-  delete $("pinInfo").dataset.i18n;
-  $("pinInfo").textContent = (name ? name + " · " : "") + coordText(lat, lon);
+  if (centreTS && centreTS.getValue() !== "") centreTS.clear(true);   // die zuletzt gewaehlte Mitte gilt
   setCentre({ mode: "pin", name: name || "", country: "", lat: +lat.toFixed(5), lon: +lon.toFixed(5) });
+}
+
+/** Zeile unter der Karte: aktuelle Mitte (auch wenn sie aus der Stadtliste kommt) */
+function pinInfo() {
+  const el = $("pinInfo"), c = state.centre;
+  delete el.dataset.i18n;
+  if (!c) el.textContent = t("pin_none");
+  else if (c.mode === "pin") el.textContent = (c.name ? c.name + " · " : "") + coordText(c.lat, c.lon);
+  else el.textContent = t("pin_current", { name: c.i !== undefined ? cityName(c.i) : c.name });
+}
+
+/** Stadt aus der Liste gewaehlt: sie gilt, ein Punkt auf der Karte faellt weg */
+function pickCity(v) {
+  if (v === "") return;                                // Leeren der Liste aendert die Mitte nicht
+  if (pinMarker) { pinMap.removeLayer(pinMarker); pinMarker = null; }
+  setCentre(cityToCentre(state.cities[+v], +v));
 }
 
 function centreMode() { return document.querySelector("input[name=centreMode]:checked").value; }
@@ -237,18 +260,18 @@ function onCentreMode() {
       pinMap = makeMap($("pinMap"));
       pinMap.on("click", (e) => setPin(e.latlng.lat, e.latlng.lng));
     }
-    setTimeout(() => pinMap.invalidateSize(), 50);
-    if (pinMarker) { const p = pinMarker.getLatLng(); setPin(p.lat, p.lng); } else setCentre(null);
-  } else {
-    const v = centreTS.getValue();
-    setCentre(v !== "" ? cityToCentre(state.cities[+v], +v) : null);
+    setTimeout(() => {                                 // Umschalten aendert die Mitte nicht, die Karte zeigt sie nur
+      pinMap.invalidateSize();
+      if (state.centre && !pinMarker) pinMap.setView([state.centre.lat, state.centre.lon], 4);
+    }, 50);
   }
+  pinInfo(); centreCheck(state.centre);
 }
 const cityToCentre = (c, i) => ({ mode: "city", name: c[0], country: c[1], lat: c[2], lon: c[3], i });
 
 function updateTitleRequirement() {
-  const pin = centreMode() === "pin";
   const c = state.centre;
+  const pin = c ? c.mode === "pin" : centreMode() === "pin";
   const noName = !pin && c && c.i !== undefined && !hasName(c.i);
   $("titleDefault").textContent = pin ? "" : " · " + (noName ? t("title_noname") : t("title_default"));
 }
@@ -256,16 +279,48 @@ function updateTitleRequirement() {
 // ------------------------------------------------------------------ Besondere Orte
 let placeMap = null, placeSeq = 0;
 
+/** Neuer Ort: erst als Entwurf (oranger Stern), Klick auf die Karte verschiebt ihn;
+ *  auf die Liste kommt er erst mit "Ort hinzufuegen" */
+function setDraft(lat, lon, found) {
+  if (state.places.length >= CONFIG.MAX_PLACES) { showError(t("max_places", { n: CONFIG.MAX_PLACES })); return; }
+  lon = wrapLon(lon);
+  const d = state.draft || (state.draft = { label: "" });
+  d.lat = +lat.toFixed(5); d.lon = +lon.toFixed(5); d.found = found || "";
+  if (!d.marker) d.marker = L.marker([d.lat, d.lon], { icon: draftIcon(), draggable: true, zIndexOffset: 1000 }).addTo(placeMap)
+    .on("dragend", (e) => { const q = e.target.getLatLng(); setDraft(q.lat, q.lng, ""); });
+  else d.marker.setLatLng([d.lat, d.lon]);
+  renderDraft();
+  const inp = $("draftName"); if (!inp.value) inp.focus({ preventScroll: true });
+}
+function renderDraft() {
+  const d = state.draft, box = $("placeDraft");
+  box.hidden = !d;
+  $("lmOpt").hidden = !state.places.length && !d;
+  if (d) {
+    $("draftMeta").textContent = [d.found, coordText(d.lat, d.lon), distText(d)].filter(Boolean).join(" · ");
+    $("draftAdd").disabled = !$("draftName").value.trim();
+  }
+  drawPreview();
+  if ($("sendMissing")) updateSend();
+}
+function dropDraft() {
+  if (state.draft) { placeMap.removeLayer(state.draft.marker); state.draft = null; }
+  $("draftName").value = ""; renderDraft();
+}
+function commitDraft() {
+  const d = state.draft, name = $("draftName").value.trim();
+  if (!d || !name) return;
+  addPlace(d.lat, d.lon, name, d.found);
+  dropDraft();
+}
+
 function addPlace(lat, lon, label, found) {
   if (state.places.length >= CONFIG.MAX_PLACES) { showError(t("max_places", { n: CONFIG.MAX_PLACES })); return; }
   lon = wrapLon(lon);
   const p = { id: ++placeSeq, label: (label || "").slice(0, CONFIG.PLACE_LABEL_MAX), lat: +lat.toFixed(5), lon: +lon.toFixed(5), found: found || "" };
-  p.marker = L.marker([p.lat, p.lon], { icon: starIcon(), draggable: true }).addTo(placeMap)
-    .on("dragend", (e) => { const q = e.target.getLatLng(); p.lat = +q.lat.toFixed(5); p.lon = +wrapLon(q.lng).toFixed(5); renderPlaces(); });
+  p.marker = L.marker([p.lat, p.lon], { icon: starIcon(), title: p.label }).addTo(placeMap);
   state.places.push(p);
   renderPlaces();
-  const inp = document.querySelector(`#placeList li[data-id="${p.id}"] input`);
-  if (inp && !p.label) inp.focus();
 }
 
 function renderPlaces() {
@@ -283,10 +338,13 @@ function renderPlaces() {
     const meta = document.createElement("div"); meta.className = "meta";
     meta.textContent = [p.found, coordText(p.lat, p.lon), distText(p)].filter(Boolean).join(" · ") + " · ";
     const rq = document.createElement("span"); rq.className = "req"; rq.textContent = t("name_req", { n: CONFIG.PLACE_LABEL_MAX }); meta.append(rq);
+    rq.hidden = !!p.label.trim();                      // Pflichthinweis nur, solange der Name fehlt
+    inp.addEventListener("input", () => { rq.hidden = !!inp.value.trim(); });
     if (tooClose(p)) { const w = document.createElement("strong"); w.className = "near"; w.textContent = " " + t("too_close", { n: NEAR_KM }); meta.append(w); }
     li.append(inp, x, meta);
     ol.append(li);
   }
+  $("lmOpt").hidden = !state.places.length && !state.draft;   // Auswahl nur, wenn es eigene Orte gibt
   nearCities();
   drawPreview();
   if ($("sendMissing")) updateSend();
@@ -297,7 +355,7 @@ function renderPlaces() {
 let pvLand = null;
 const R_EARTH = 6371.0088, KM_PER_MI = 1.609344;
 const PV = { ocean: "#1d5c9e", land: "#d9cfae", ring: "rgba(255,255,255,.75)", ray: "rgba(255,255,255,.35)",
-             ink: "#182434", bg: "#fbf9f4", head: '"Federo SZ", Georgia, serif', body: '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif' };
+             ink: "#182434", bg: "#fbf9f4", draft: "#f0a040", head: '"Federo SZ", Georgia, serif', body: '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif' };
 const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 
 function pvText(g, text, x, y, font, color, { align = "center", base = "middle", spacing = 0, shadow = 0 } = {}) {
@@ -384,10 +442,11 @@ function pvRender(view, c) {
     const k = state.cities[+i]; if (k) pts.push({ lat: k[2], lon: k[3], label: cityName(+i), star: false });
   }
   for (const p of state.places) pts.push({ lat: p.lat, lon: p.lon, label: p.label.trim() || t("special_place"), star: true });
+  if (state.draft) pts.push({ lat: state.draft.lat, lon: state.draft.lon, label: $("draftName").value.trim() || t("special_place"), star: true, draft: true });
   for (const p of pts) {
     const xy = proj([p.lon, p.lat]); if (!xy) continue;
     const [x, y] = xy;
-    if (p.star) pvText(g, "★", x, y, `${15 * u}px ${PV.body}`, "#fff", { shadow: 3 * u });
+    if (p.star) pvText(g, "★", x, y, `${(p.draft ? 19 : 15) * u}px ${PV.body}`, p.draft ? PV.draft : "#fff", { shadow: 3 * u });
     else { g.fillStyle = "#fff"; g.strokeStyle = PV.ink; g.lineWidth = 1 * u; g.beginPath(); g.arc(x, y, 2.6 * u, 0, 2 * Math.PI); g.fill(); g.stroke(); }
     const left = x > cx + Rm * 0.55;                     // am rechten Rand Beschriftung nach links
     pvText(g, p.label, x + (left ? -7 : 7) * u, y, `600 ${11 * u}px ${PV.body}`, "#fff", { align: left ? "right" : "left", shadow: 3 * u });
@@ -399,6 +458,12 @@ function pvRender(view, c) {
   }
   const title = upper($("title").value.trim() || (c.mode === "city" ? (c.i !== undefined ? cityName(c.i) : c.name) : ""));
   if (title) pvText(g, title, cx, cy + Rm + band + 0.055 * W, `${26 * u}px ${PV.head}`, PV.ink, { spacing: 6 * u });
+  // kleine Kopie neben der Mitte (nur schmale Bildschirme, dort liegt die Vorschau hinter einem Knopf)
+  const mini = $("centreMiniCanvas");
+  if (mini && mini.offsetParent) {
+    const mg = mini.getContext("2d"); mg.clearRect(0, 0, mini.width, mini.height);
+    mg.drawImage(cv, 0, 0, mini.width, mini.height);
+  }
 }
 
 /** Hinweis unter den Wunschstaedten, wenn eine zu nah an der Mitte liegt */
@@ -418,6 +483,9 @@ function applyUI() {
   document.querySelectorAll("[data-i18n]").forEach((el) => { el.innerHTML = t(el.dataset.i18n); });   // eigene feste Texte
   document.querySelectorAll("[data-i18n-ph]").forEach((el) => { el.placeholder = t(el.dataset.i18nPh); });
   document.querySelectorAll("[data-i18n-aria]").forEach((el) => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
+  document.querySelectorAll("[data-i18n-alt]").forEach((el) => { el.alt = t(el.dataset.i18nAlt); });
+  document.querySelectorAll("[data-i18n-src]").forEach((el) => { el.src = t(el.dataset.i18nSrc); });
+  pinInfo(); renderDraft();
   document.querySelectorAll(".uilang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ui === UI)));
   for (const [id, key] of [["centreSelect", "city_ph"], ["cities", "cities_ph"]]) {
     const ts = $(id).tomselect; if (!ts) continue;
@@ -479,6 +547,7 @@ function missing() {
   if (!state.centre) m.push(t("m_centre"));
   if (!$("title").value.trim()) m.push(t("m_title"));
   if (state.places.some((p) => !p.label.trim())) m.push(t("m_place"));
+  if (state.draft) m.push(t("m_draft"));
   if (!$("consent").checked) m.push(t("m_consent"));
   if (CONFIG.FUNCTION_URL && !state.altcha) m.push(t("m_security"));
   return m;
@@ -506,6 +575,7 @@ function collect() {
       break;
     }
   }
+  if (state.draft) errs.push(t("m_draft"));
   if (!$("consent").checked) errs.push(t("e_consent"));
   if (CONFIG.FUNCTION_URL && !state.altcha) errs.push(t("e_security"));
   const cities = $("cities").tomselect.getValue().map((i) => state.cities[+i]).filter(Boolean)
@@ -521,6 +591,7 @@ function collect() {
       unit: document.querySelector("input[name=unit]:checked").value,
       cities,
       places: state.places.map((p) => ({ label: p.label.trim(), lat: p.lat, lon: p.lon, found: p.found })),
+      landmarks: state.places.length ? $("landmarks").checked : true,   // ohne eigene Orte immer bekannte Orte
       consent: true,
       altcha: state.altcha,
     },
@@ -590,7 +661,7 @@ async function init() {
   const score = (search) => { const q = norm(search.trim()); return (o) => rank(q, state.keys[o.i][0], state.keys[o.i][1], o.pop); };
   const common = { options: opts, searchField: ["text"], maxOptions: 40, render, score, sortField: [{ field: "$score", direction: "desc" }] };
   centreTS = new TomSelect("#centreSelect", { ...common, maxItems: 1, allowEmptyOption: true,
-    onChange: (v) => { if (centreMode() === "city") setCentre(v !== "" ? cityToCentre(state.cities[+v], +v) : null); } });
+    onChange: (v) => pickCity(v) });
   new TomSelect("#cities", { ...common, maxItems: CONFIG.MAX_CITIES, plugins: ["remove_button"],
     onItemAdd() { this.setTextboxValue(""); this.refreshOptions(false); },   // Suchtext nach der Auswahl leeren
     score: (search) => { const f = score(search); return (o) => hasName(o.i) ? f(o) : 0; },   // nur Orte mit Namen in der Kartensprache
@@ -639,11 +710,17 @@ async function init() {
   setUI(initialUI());
 
   placeMap = makeMap($("placeMap"));
-  placeMap.on("click", (e) => addPlace(e.latlng.lat, e.latlng.lng, "", ""));
+  placeMap.on("click", (e) => setDraft(e.latlng.lat, e.latlng.lng, ""));
   wireSearch($("placeSearch"), $("placeSearchBtn"), $("placeResults"), (it) => {
     placeMap.setView([it.lat, it.lon], it.src === "city" ? 9 : 12);
-    addPlace(it.lat, it.lon, "", [it.name, it.detail].filter(Boolean).join(", ").slice(0, 120));
+    setDraft(it.lat, it.lon, [it.name, it.detail].filter(Boolean).join(", ").slice(0, 120));
   });
+  $("draftName").addEventListener("input", () => { $("draftAdd").disabled = !$("draftName").value.trim(); drawPreview(); });
+  $("draftName").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); commitDraft(); } });
+  $("draftAdd").addEventListener("click", commitDraft);
+  $("draftDrop").addEventListener("click", dropDraft);
+  $("landmarks").addEventListener("change", () => { $("lmExample").classList.toggle("off", !$("landmarks").checked); });
+  $("centreMini").addEventListener("click", () => pvShow(true));
   // Suche fuer die Mitte, sobald die Karte dafuer existiert
   wireSearch($("pinSearch"), $("pinSearchBtn"), $("pinResults"), (it) => {
     pinMap.setView([it.lat, it.lon], 10); setPin(it.lat, it.lon, it.name);

@@ -139,3 +139,26 @@ body.sent .pv-fab, body.sent .pv-panel, body.pv-open .pv-fab { display: none !im
 .subhead { font-family: var(--head); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-size: clamp(15px, 2.6vw, 19px); margin: 4px 0 14px; }
 .brandmark { display: flex; justify-content: center; margin-bottom: 10px; }
 .brandmark svg.mark { height: 56px; width: auto; color: var(--ink); }
+
+/* Mitte: kleine Vorschau neben der Auswahl (nur ohne seitliche Vorschau) */
+.centre-mini { display: flex; align-items: center; gap: 14px; margin-top: 14px; padding: 8px 14px 8px 8px; border: 1px solid var(--line); border-radius: 14px; background: #fff; color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; }
+.centre-mini canvas { width: 96px; height: 108px; border-radius: 10px; background: var(--soft); }
+.centre-mini span { text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 1140px) { .centre-mini { display: none !important; } }
+/* besondere Orte: Entwurf (orange) bis "Ort hinzufuegen" */
+.draft-star { font-size: 34px; line-height: 34px; color: #f0a040; text-shadow: 0 0 2px #182434, 0 0 5px #fff, 0 0 9px #fff; animation: draftPulse 1.6s ease-in-out infinite; }
+@keyframes draftPulse { 50% { transform: scale(1.15); } }
+@media (prefers-reduced-motion: reduce) { .draft-star { animation: none; } }
+.draft { margin-top: 12px; padding: 12px 14px; border: 2px solid #f0a040; border-radius: 14px; background: #fff8ec; }
+.draft-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 8px; margin-bottom: 8px; }
+.draft-dot { color: #f0a040; font-size: 18px; }
+.draft .meta { color: var(--muted); font-size: 13px; }
+.draft-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.draft-row input { flex: 1 1 200px; min-width: 0; padding: 8px 12px; }
+.draft .hint { margin: 8px 0 0; }
+/* bekannte Orte: Auswahl mit Beispielbild */
+.lm-opt { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--soft); }
+.lm-example { margin: 12px 0 6px; }
+.lm-pic { display: block; width: 100%; max-width: 560px; height: auto; transition: opacity .2s, filter .2s; }
+.lm-example.off .lm-pic { opacity: .35; filter: grayscale(1); }
+.lm-example figcaption { margin-top: 6px; color: var(--muted); font-size: 13px; }
