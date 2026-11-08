@@ -20,8 +20,11 @@ const UI_LANGS = ["en", "de", "fr", "es"];
 const UI_LOCALE = { en: "en-GB", de: "de-DE", fr: "fr-FR", es: "es-ES" };
 let UI = "en";
 /** Text der Oberflaeche, {x} aus vars */
+/** Digitales Produkt (Link mit &type=digital): eigene Texte, wo es sie gibt (Schluessel + "_dig") */
+const DIGITAL = new URLSearchParams(location.search).get("type") === "digital";
 const t = (key, vars = {}) => {
-  const s = (window.UI_STRINGS[UI] || {})[key] ?? window.UI_STRINGS.en[key] ?? key;
+  const k = DIGITAL && ((window.UI_STRINGS[UI] || {})[key + "_dig"] ?? window.UI_STRINGS.en[key + "_dig"]) != null ? key + "_dig" : key;
+  const s = (window.UI_STRINGS[UI] || {})[k] ?? window.UI_STRINGS.en[k] ?? k;
   return s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 };
 let _dn = null, _dnLang = "";
